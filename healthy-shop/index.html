@@ -6,28 +6,15 @@
     <title>HealthyBites - Cửa Hàng Đồ Ăn Kiêng</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .menu-tabs {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        .tab-btn-menu {
-            padding: 8px 16px;
-            border: 1px solid #27ae60;
-            background-color: transparent;
-            color: #27ae60;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .tab-btn-menu:hover, .tab-btn-menu.active {
-            background-color: #27ae60;
-            color: #fff;
+        @media print {
+            body * { visibility: hidden; }
+            #invoicePrintArea, #invoicePrintArea * { visibility: visible; }
+            #invoicePrintArea { position: absolute; left: 0; top: 0; width: 100%; }
         }
     </style>
 </head>
 <body>
+    <!-- HEADER -->
     <header class="header">
         <div class="container header__content">
             <h1 class="logo">🥗 HealthyBites</h1>
@@ -37,25 +24,31 @@
                 <p id="tipText">Đang tải mẹo...</p>
             </aside>
 
-            <!-- KHU VỰC TÀI KHOẢN (ĐĂNG KÝ / ĐĂNG NHẬP / ĐĂNG XUẤT) -->
             <div class="auth-buttons" id="authSection">
-                <!-- Hiển thị khi CHƯA đăng nhập -->
                 <div id="guestNav">
-                    <button class="btn btn-outline" onclick="openAuthModal('login')">Đăng Nhập</button>
-                    <button class="btn btn-primary" onclick="openAuthModal('register')">Đăng Ký</button>
+                    <button class="btn btn-outline" id="btnOpenLogin">Đăng Nhập</button>
+                    <button class="btn btn-primary" id="btnOpenRegister">Đăng Ký</button>
                 </div>
-                <!-- Hiển thị khi ĐÃ đăng nhập -->
                 <div id="userNav" style="display: none;">
                     <span id="userGreeting">Xin chào, <strong id="userName">User</strong></span>
-                    <button class="btn btn-danger-sm" onclick="logout()">Đăng Xuất</button>
+                    <button class="btn btn-outline btn-sm" id="btnOpenProfile">Hồ Sơ</button>
+                    <button class="btn btn-danger-sm" id="btnLogout">Đăng Xuất</button>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- MAIN LAYOUT -->
     <main class="container shop-layout">
-        <!-- CỘT TRÁI: Danh sách sản phẩm -->
+        <!-- CỘT TRÁI -->
         <section class="products-section">
+            <!-- 1. HỒ SƠ CÁ NHÂN (Ẩn mặc định, bấm nút Hồ Sơ mới mở) -->
+            <div class="profile-section card" id="profileSection" style="display: none; margin-bottom: 24px;">
+                <h3>👤 Hồ Sơ Cá Nhân</h3>
+                <div id="profileContainer" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- 2. THỰC ĐƠN & LỌC -->
             <div class="card filter-bar">
                 <input type="text" id="searchInput" placeholder="🔎 Tìm món ăn kiêng hoặc đồ uống...">
                 <select id="categoryFilter">
@@ -67,34 +60,110 @@
                 </select>
             </div>
 
-            <!-- NÚT TAB PHÂN LOẠI ĐỒ ĂN & ĐỒ UỐNG -->
             <div class="menu-tabs">
-                <button id="tabAll" class="tab-btn-menu active" onclick="switchMenuType('all')">🍱 Tất Cả</button>
-                <button id="tabFood" class="tab-btn-menu" onclick="switchMenuType('food')">🥗 Đồ Ăn</button>
-                <button id="tabDrink" class="tab-btn-menu" onclick="switchMenuType('drink')">🥤 Đồ Uống / Nước</button>
+                <button id="tabAll" class="tab-btn-menu active">🍱 Tất Cả</button>
+                <button id="tabFood" class="tab-btn-menu">🥗 Đồ Ăn</button>
+                <button id="tabDrink" class="tab-btn-menu">🥤 Đồ Uống / Nước</button>
             </div>
 
             <h2 id="menuTitle">Thực Đơn Đồ Ăn & Đồ Uống</h2>
-            <div id="productGrid" class="product-grid">
-                <!-- Sản phẩm render từ JS -->
+            <div id="productGrid" class="product-grid"></div>
+
+            <!-- 3. MÓN ĂN YÊU THÍCH -->
+            <div class="favorites-section card" style="margin-top: 24px;">
+                <h3>❤️ Món Ăn Yêu Thích</h3>
+                <div id="favoritesGrid" class="product-grid" style="margin-top: 10px;"></div>
             </div>
+
+            <!-- 4. ĐÁNH GIÁ & PHẢN HỒI -->
+            <div class="reviews-section card" style="margin-top: 24px;">
+                <h3>💬 Đánh Giá & Phản Hồi Từ Khách Hàng</h3>
+                <form id="reviewForm" style="margin: 15px 0;">
+                    <div class="form-group">
+                        <label>Chọn số sao:</label>
+                        <select id="reviewRating" style="padding: 6px; border-radius: 4px;">
+                            <option value="5">⭐⭐⭐⭐⭐ (5/5 Tuyệt vời)</option>
+                            <option value="4">⭐⭐⭐⭐ (4/5 Tốt)</option>
+                            <option value="3">⭐⭐⭐ (3/5 Bình thường)</option>
+                            <option value="2">⭐⭐ (2/5 Tạm được)</option>
+                            <option value="1">⭐ (1/5 Dẹp tiệm)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="reviewComment" rows="2" placeholder="Chia sẻ cảm nhận..." style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Gửi Đánh Giá</button>
+                </form>
+                <div id="reviewsList" class="reviews-list"></div>
+            </div>
+
+            <!-- 5. LỊCH SỬ ĐƠN HÀNG -->
+            <div class="orders-section card" style="margin-top: 24px;">
+                <h3>📜 Lịch Sử Đơn Hàng Của Bạn</h3>
+                <div id="ordersList" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- 6. TRANG QUẢN TRỊ ADMIN (Mặc định ẩn, chỉ Admin mới thấy) -->
+<div class="admin-panel card" id="adminSection" style="display: none; margin-top: 24px; border-top: 4px solid #3498db;">
+    <h3>⚙️ Trang Quản Trị Admin</h3>
+    
+    <div id="adminAnalyticsContainer" style="margin: 15px 0; padding: 15px; background: #eef9f1; border-radius: 8px;"></div>
+
+    <h4 style="margin-top: 20px;">➕ Thêm / Chỉnh Sửa Món Ăn</h4>
+    <form id="adminProductForm" style="margin-top: 10px; display: grid; gap: 10px; grid-template-columns: 1fr 1fr;">
+        <input type="hidden" id="adminProdId">
+        <input type="text" id="adminProdName" placeholder="Tên món ăn..." required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        <input type="number" id="adminProdPrice" placeholder="Giá tiền (Đồng)..." required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        <input type="text" id="adminProdCalories" placeholder="Số Calo (VD: 250 Kcal)..." required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        <select id="adminProdCategory" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="Eat Clean">Eat Clean</option>
+            <option value="Keto">Keto</option>
+            <option value="Vegan">Vegan (Chay)</option>
+            <option value="Low-Carb">Low-Carb</option>
+        </select>
+        <select id="adminProdType" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+            <option value="food">🥗 Đồ ăn</option>
+            <option value="drink">🥤 Đồ uống</option>
+        </select>
+        <input type="text" id="adminProdImage" placeholder="Đường dẫn ảnh..." required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+        <div style="grid-column: span 2; display: flex; gap: 10px;">
+            <button type="submit" class="btn btn-primary" style="flex: 1;">Lưu Sản Phẩm</button>
+            <button type="button" id="adminResetFormBtn" class="btn btn-outline">Hủy / Làm mới</button>
+        </div>
+    </form>
+
+    <h4 style="margin-top: 25px;">📦 Danh Sách Sản Phẩm</h4>
+    <div id="adminProductsList" style="margin-top: 10px;"></div>
+
+    <h4 style="margin-top: 25px;">📋 Quản Lý Đơn Hàng Từ Khách</h4>
+    <div id="adminOrdersList" style="margin-top: 10px;"></div>
+</div>
         </section>
 
-        <!-- CỘT PHẢI: Giỏ hàng -->
+        <!-- CỘT PHẢI: GIỎ HÀNG -->
         <section class="cart-section card">
             <h2>🛒 Giỏ Hàng Của Bạn</h2>
             <div id="cartItems" class="cart-items">
                 <p class="empty-cart">Giỏ hàng trống</p>
             </div>
 
-            <!-- THÔNG TIN ĐỊA CHỈ NHẬN HÀNG -->
+            <!-- Mã giảm giá -->
+            <div class="voucher-box" style="margin: 15px 0; padding-top: 15px; border-top: 1px dashed #ddd;">
+                <div style="display: flex; gap: 6px;">
+                    <input type="text" id="voucherCodeInput" placeholder="Mã giảm giá (HEALTHY10)..." style="flex: 1; padding: 6px; border: 1px solid #ddd; border-radius: 4px; text-transform: uppercase;">
+                    <button id="applyVoucherBtn" class="btn btn-outline" type="button">Áp dụng</button>
+                </div>
+                <small id="voucherMsg" style="display: block; margin-top: 4px; font-weight: bold;"></small>
+            </div>
+
+            <!-- Thông tin giao hàng -->
             <div class="delivery-address-section" style="margin: 15px 0; padding-top: 15px; border-top: 1px dashed #ddd;">
                 <h3 style="font-size: 15px; margin-bottom: 10px; color: #2c3e50;">📍 Thông tin giao hàng</h3>
-                <div class="form-group" style="margin-bottom: 8px;">
-                    <input type="text" id="shippingPhone" placeholder="Số điện thoại nhận hàng..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                <div class="form-group">
+                    <input type="text" id="shippingPhone" placeholder="Số điện thoại nhận hàng..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px;">
                 </div>
-                <div class="form-group" style="margin-bottom: 0;">
-                    <textarea id="shippingAddress" rows="2" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize: none; box-sizing: border-box;"></textarea>
+                <div class="form-group">
+                    <textarea id="shippingAddress" rows="2" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize: none;"></textarea>
                 </div>
             </div>
 
@@ -103,47 +172,42 @@
                     <span>Tổng tiền:</span>
                     <strong id="cartTotal">0 đ</strong>
                 </div>
-                <button id="checkoutBtn" class="btn btn-primary btn-block" onclick="checkout()">Tiến Hành Đặt Hàng</button>
+                <button id="checkoutBtn" class="btn btn-primary btn-block">Tiến Hành Đặt Hàng</button>
             </div>
         </section>
     </main>
 
-    <!-- POPUP MODAL ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <!-- MODAL AUTH -->
     <div class="modal" id="authModal">
         <div class="modal-content card">
-            <span class="close-btn" onclick="closeAuthModal()">&times;</span>
-            
-            <!-- Tab chuyển đổi -->
+            <span class="close-btn" id="closeAuthModalBtn">&times;</span>
             <div class="tab-header">
-                <button id="loginTabBtn" class="tab-btn active" onclick="switchTab('login')">Đăng Nhập</button>
-                <button id="registerTabBtn" class="tab-btn" onclick="switchTab('register')">Đăng Ký</button>
+                <button id="loginTabBtn" class="tab-btn active">Đăng Nhập</button>
+                <button id="registerTabBtn" class="tab-btn">Đăng Ký</button>
             </div>
-
-            <!-- Form Đăng Nhập -->
             <form id="loginForm" class="auth-form">
                 <div class="form-group">
-                    <label for="loginEmail">Email / Tên đăng nhập</label>
+                    <label>Email / Tên đăng nhập</label>
                     <input type="text" id="loginEmail" required placeholder="Nhập email...">
                 </div>
                 <div class="form-group">
-                    <label for="loginPassword">Mật khẩu</label>
+                    <label>Mật khẩu</label>
                     <input type="password" id="loginPassword" required placeholder="Nhập mật khẩu...">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Đăng Nhập</button>
             </form>
 
-            <!-- Form Đăng Ký -->
             <form id="registerForm" class="auth-form" style="display: none;">
                 <div class="form-group">
-                    <label for="regName">Họ và Tên</label>
+                    <label>Họ và Tên</label>
                     <input type="text" id="regName" required placeholder="VD: Nguyễn Văn A">
                 </div>
                 <div class="form-group">
-                    <label for="regEmail">Email đăng nhập</label>
+                    <label>Email đăng nhập</label>
                     <input type="email" id="regEmail" required placeholder="name@example.com">
                 </div>
                 <div class="form-group">
-                    <label for="regPassword">Mật khẩu</label>
+                    <label>Mật khẩu</label>
                     <input type="password" id="regPassword" required placeholder="Tối thiểu 6 ký tự">
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Đăng Ký Tài Khoản</button>
@@ -151,6 +215,35 @@
         </div>
     </div>
 
-    <script src="js/app.js"></script>
+    <!-- MODAL THANH TOÁN -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content card" style="max-width: 420px; text-align: center;">
+            <span class="close-btn" id="closePaymentModalBtn">&times;</span>
+            <h3>💳 Cổng Thanh Toán Mô Phỏng</h3>
+            <p style="margin: 10px 0; color: #555;">Số tiền thanh toán: <strong id="payAmount" style="color: #27ae60; font-size: 1.2rem;">0 đ</strong></p>
+            <div style="margin: 15px 0; text-align: left; padding: 0 20px;">
+                <label><input type="radio" name="payMethod" value="qr" checked> Quét mã QR MoMo / ZaloPay</label><br>
+                <label><input type="radio" name="payMethod" value="bank"> Chuyển khoản ngân hàng</label><br>
+                <label><input type="radio" name="payMethod" value="cod"> Thanh toán khi nhận hàng (COD)</label>
+            </div>
+            <div id="qrContainer" style="margin: 15px 0;">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=HealthyBites_Payment" alt="QR Code" style="border: 1px solid #ddd; padding: 5px; border-radius: 8px;">
+            </div>
+            <button id="confirmPayBtn" class="btn btn-primary btn-block">Xác Nhận Đã Thanh Toán</button>
+        </div>
+    </div>
+
+    <!-- MODAL XEM & IN HÓA ĐƠN -->
+    <div class="modal" id="invoiceModal">
+        <div class="modal-content card" style="max-width: 600px;">
+            <span class="close-btn" id="closeInvoiceModalBtn">&times;</span>
+            <div id="invoicePrintArea" style="padding: 10px;"></div>
+            <div style="text-align: right; margin-top: 15px;">
+                <button id="btnPrintInvoice" class="btn btn-primary">🖨️ In Hóa Đơn</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
