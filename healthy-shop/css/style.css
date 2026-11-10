@@ -301,3 +301,18 @@ body {
 .product-info-box {
     flex-grow: 1;
 }
+.menu-tabs .btn {
+    border: 1px solid #27ae60;
+    color: #27ae60;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.menu-tabs .btn:hover {
+    background-color: #27ae60;
+    color: white;
+}

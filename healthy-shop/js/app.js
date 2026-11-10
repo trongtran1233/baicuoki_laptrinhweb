@@ -1,11 +1,12 @@
-// 1. DỮ LIỆU SẢN PHẨM (KÈM HÌNH ẢNH)
-const products = [
+// 1. DỮ LIỆU SẢN PHẨM PHÂN LOẠI 'food' (ĐỒ ĂN) VÀ 'drink' (ĐỒ UỐNG)
+const defaultProducts = [
     { 
         id: 1, 
-        name: 'Bánh mì đen ', 
+        name: 'Bánh mì đen', 
         price: 45000, 
         calories: '250 Kcal', 
-        category: 'Eat Clean', 
+        category: 'Eat Clean',
+        type: 'food',
         image: 'images/banh-mi-den.png' 
     },
     { 
@@ -13,87 +14,98 @@ const products = [
         name: 'Ức gà áp chảo sốt chanh dây', 
         price: 65000, 
         calories: '165 Kcal', 
-        category: 'Keto', 
-        image: 'images/uc-ga.png'        // Nhớ chú ý chuẩn đuôi .png[cite: 3]
+        category: 'Keto',
+        type: 'food',
+        image: 'images/uc-ga.png'
     },
     { 
         id: 3, 
         name: 'Salad cá hồi bơ xanh', 
         price: 85000, 
         calories: '320 Kcal', 
-        category: 'Eat Clean', 
-        image: 'images/salah-ca-hoi.png'    // Nhớ chú ý chuẩn đuôi .png[cite: 3]
+        category: 'Eat Clean',
+        type: 'food',
+        image: 'images/salah-ca-hoi.png'
     },
     { 
         id: 4, 
-        name: 'Cơm gạo lứt thịt bò bằm', 
+        name: 'Cơm gạo lứt thịt bò rau củ', 
         price: 55000, 
         calories: '380 Kcal', 
-        category: 'Low-Carb', 
-        image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=400' 
+        category: 'Low-Carb',
+        type: 'food',
+        image: 'images/com-gao-luc.png' 
     },
     { 
         id: 5, 
-        name: 'Bún nưa trộn rau củ Vegan', 
+        name: 'Bún trộn rau củ sốt cay', 
         price: 50000, 
         calories: '190 Kcal', 
-        category: 'Vegan', 
-        image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400' 
+        category: 'Vegan',
+        type: 'food',
+        image: 'images/bun-tron-rau-cu.png' 
     },
     { 
         id: 6, 
         name: 'Smoothie Bơ Chuối Hạnh Nhân', 
         price: 40000, 
         calories: '210 Kcal', 
-        category: 'Vegan', 
-        image: 'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400' 
+        category: 'Vegan',
+        type: 'drink',
+        image: 'images/smoothie-bo-chuoi-hanh-nhan.png' 
     },
     { 
         id: 7, 
         name: 'Nước ép cần tây detox', 
         price: 35000, 
         calories: '45 Kcal', 
-        category: 'Vegan', 
-        image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=400' 
+        category: 'Vegan',
+        type: 'drink',
+        image: 'images/nuoc-ep-can-tay.png' 
     },
     { 
         id: 8, 
-        name: 'Khoai lang mật nướng', 
-        price: 30000, 
+        name: 'Khoai lang luộc', 
+        price: 15000, 
         calories: '180 Kcal', 
-        category: 'Low-Carb', 
-        image: 'https://images.unsplash.com/photo-1585325701166-39f28c467a3a?w=400' 
+        category: 'Low-Carb',
+        type: 'food',
+        image: 'images/khoai-lang.png' 
     },
     { 
         id: 9, 
-        name: 'Bánh pancake yến mạch táo đỏ', 
+        name: 'Bánh pancake yến mạch', 
         price: 42000, 
         calories: '195 Kcal', 
-        category: 'Vegan', 
-        image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400' 
+        category: 'Vegan',
+        type: 'food',
+        image: 'images/banh-pancake.png' 
     },
     { 
         id: 10, 
-        name: 'Bò nướng tảng sốt tiêu đen Keto', 
+        name: 'Bò áp chảo sốt tiêu đen ', 
         price: 110000, 
         calories: '420 Kcal', 
-        category: 'Keto', 
-        image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400' 
+        category: 'Keto',
+        type: 'food',
+        image: 'images/bo-ap-chao.png' 
     },
     { 
         id: 11, 
-        name: 'Nước ép cần tây dưa chuột Detox', 
+        name: 'Nước ép Cam, cà rốt, táo', 
         price: 35000, 
         calories: '45 Kcal', 
-        category: 'Vegan', 
-        image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=400' 
+        category: 'Vegan',
+        type: 'drink',
+        image: 'images/nuoc-ep-cam-carot-tao.png' 
     },
     { 
         id: 12, 
         name: 'Tôm hấp sả ăn kèm rau mầm', 
         price: 75000, 
         calories: '150 Kcal', 
-        category: 'Keto', 
+        category: 'Keto',
+        type: 'food',
         image: 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=400' 
     },
     { 
@@ -101,7 +113,8 @@ const products = [
         name: 'Sữa chua yến mạch hạt granola', 
         price: 38000, 
         calories: '180 Kcal', 
-        category: 'Eat Clean', 
+        category: 'Eat Clean',
+        type: 'drink',
         image: 'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400' 
     },
     { 
@@ -109,12 +122,20 @@ const products = [
         name: 'Salad ức gà xé phay hạt quinoa', 
         price: 60000, 
         calories: '220 Kcal', 
-        category: 'Eat Clean', 
+        category: 'Eat Clean',
+        type: 'food',
         image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400' 
-    },
+    }
 ];
 
-// 2. LƯU TRỮ LOCALSTORAGE
+// Đồng bộ mảng mới vào storage
+let products = defaultProducts;
+localStorage.setItem('healthyProducts', JSON.stringify(products));
+
+// Trạng thái tab thực đơn ('all', 'food', 'drink')
+let currentMenuType = 'all';
+
+// 2. KHAI BÁO CÁC BIẾN LƯU TRỮ
 let cart = JSON.parse(localStorage.getItem('healthyCart')) || [];
 let users = JSON.parse(localStorage.getItem('healthyUsers')) || [];
 let currentUser = JSON.parse(localStorage.getItem('healthyCurrentUser')) || null;
@@ -126,6 +147,7 @@ const cartTotalElement = document.getElementById('cartTotal');
 const searchInput = document.getElementById('searchInput');
 const categoryFilter = document.getElementById('categoryFilter');
 const tipText = document.getElementById('tipText');
+const menuTitle = document.getElementById('menuTitle');
 
 // Auth DOM
 const authModal = document.getElementById('authModal');
@@ -137,7 +159,7 @@ const registerForm = document.getElementById('registerForm');
 const loginTabBtn = document.getElementById('loginTabBtn');
 const registerTabBtn = document.getElementById('registerTabBtn');
 
-// 4. GỌI FETCH API MẸO SỨC KHỎE (ASYNC/AWAIT & TRY/CATCH)
+// 4. FETCH API MẸO SỨC KHỎE
 async function fetchHealthTip() {
     try {
         const response = await fetch('https://api.adviceslip.com/advice');
@@ -149,7 +171,27 @@ async function fetchHealthTip() {
     }
 }
 
-// 5. HIỂN THỊ DANH SÁCH SẢN PHẨM CÓ ẢNH
+// 5. CHUYỂN ĐỔI TAB ĐỒ ĂN / ĐỒ UỐNG
+function switchMenuType(type) {
+    currentMenuType = type;
+
+    // Cập nhật class active cho các nút tab
+    document.querySelectorAll('.tab-btn-menu').forEach(btn => btn.classList.remove('active'));
+    if (type === 'all') document.getElementById('tabAll').classList.add('active');
+    if (type === 'food') document.getElementById('tabFood').classList.add('active');
+    if (type === 'drink') document.getElementById('tabDrink').classList.add('active');
+
+    // Đổi tiêu đề thực đơn
+    if (menuTitle) {
+        if (type === 'food') menuTitle.textContent = '🥗 Danh Sách Đồ Ăn Kiêng';
+        else if (type === 'drink') menuTitle.textContent = '🥤 Danh Sách Đồ Uống & Nước Detox';
+        else menuTitle.textContent = 'Thực Đơn Đồ Ăn & Đồ Uống';
+    }
+
+    renderProducts();
+}
+
+// 6. HIỂN THỊ DANH SÁCH SẢN PHẨM
 function renderProducts() {
     if (!productGrid) return;
     const keyword = searchInput ? searchInput.value.toLowerCase().trim() : '';
@@ -158,12 +200,13 @@ function renderProducts() {
     const filtered = products.filter(p => {
         const matchesName = p.name.toLowerCase().includes(keyword);
         const matchesCat = category === 'all' || p.category === category;
-        return matchesName && matchesCat;
+        const matchesType = currentMenuType === 'all' || p.type === currentMenuType;
+        return matchesName && matchesCat && matchesType;
     });
 
     productGrid.innerHTML = '';
     if (filtered.length === 0) {
-        productGrid.innerHTML = '<p style="padding: 10px; color: #666;">Không tìm thấy sản phẩm phù hợp.</p>';
+        productGrid.innerHTML = '<p style="padding: 10px; color: #666;">Không tìm thấy món phù hợp.</p>';
         return;
     }
 
@@ -185,7 +228,7 @@ function renderProducts() {
     });
 }
 
-// 6. XỬ LÝ ĐĂNG NHẬP / ĐĂNG KÝ / ĐĂNG XUẤT
+// 7. XỬ LÝ ĐĂNG NHẬP / ĐĂNG KÝ / ĐĂNG XUẤT
 function checkAuthState() {
     if (!guestNav || !userNav) return;
     if (currentUser) {
@@ -274,7 +317,7 @@ function logout() {
     }
 }
 
-// 7. QUẢN LÝ GIỎ HÀNG
+// 8. QUẢN LÝ GIỎ HÀNG & THANH TOÁN
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     const existing = cart.find(item => item.id === productId);
@@ -338,19 +381,56 @@ function checkout() {
         openAuthModal('login');
         return;
     }
+
     if (cart.length === 0) {
         alert('Giỏ hàng của bạn đang trống!');
         return;
     }
-    alert(`Đặt hàng thành công! Đơn hàng sẽ gửi đến ${currentUser.name}.`);
+
+    const phoneInput = document.getElementById('shippingPhone');
+    const addressInput = document.getElementById('shippingAddress');
+
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    const address = addressInput ? addressInput.value.trim() : '';
+
+    if (!phone || !address) {
+        alert('Vui lòng nhập đầy đủ Số điện thoại và Địa chỉ nhận hàng!');
+        if (!phone && phoneInput) phoneInput.focus();
+        else if (!address && addressInput) addressInput.focus();
+        return;
+    }
+
+    const orderData = {
+        id: Date.now(),
+        customerName: currentUser.name,
+        email: currentUser.email,
+        phone: phone,
+        address: address,
+        items: cart,
+        orderDate: new Date().toLocaleString('vi-VN')
+    };
+
+    let orders = JSON.parse(localStorage.getItem('healthyOrders')) || [];
+    orders.push(orderData);
+    localStorage.setItem('healthyOrders', JSON.stringify(orders));
+
+    alert(`🎉 Đặt hàng thành công!\n\nThông tin giao hàng:\n- Người nhận: ${currentUser.name}\n- Số điện thoại: ${phone}\n- Địa chỉ: ${address}\n\nĐơn hàng sẽ sớm được gửi đến bạn!`);
+    
     cart = [];
     localStorage.setItem('healthyCart', JSON.stringify(cart));
+    if (phoneInput) phoneInput.value = '';
+    if (addressInput) addressInput.value = '';
+    
     renderCart();
 }
 
-// 8. LẮNG NGHE SỰ KIỆN VÀ KHỞI CHẠY
+// 9. LẮNG NGHE SỰ KIỆN VÀ KHỞI CHẠY
 if (searchInput) searchInput.addEventListener('input', renderProducts);
 if (categoryFilter) categoryFilter.addEventListener('change', renderProducts);
+
+window.addEventListener('click', (e) => {
+    if (e.target === authModal) closeAuthModal();
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchHealthTip();

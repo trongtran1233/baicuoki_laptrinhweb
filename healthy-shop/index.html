@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HealthyBites - Cửa Hàng Đồ Ăn Kiêng</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .menu-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .tab-btn-menu {
+            padding: 8px 16px;
+            border: 1px solid #27ae60;
+            background-color: transparent;
+            color: #27ae60;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tab-btn-menu:hover, .tab-btn-menu.active {
+            background-color: #27ae60;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
     <header class="header">
@@ -36,7 +57,7 @@
         <!-- CỘT TRÁI: Danh sách sản phẩm -->
         <section class="products-section">
             <div class="card filter-bar">
-                <input type="text" id="searchInput" placeholder="🔎 Tìm món ăn kiêng...">
+                <input type="text" id="searchInput" placeholder="🔎 Tìm món ăn kiêng hoặc đồ uống...">
                 <select id="categoryFilter">
                     <option value="all">Tất cả danh mục</option>
                     <option value="Keto">Keto</option>
@@ -46,7 +67,14 @@
                 </select>
             </div>
 
-            <h2>Thực Đơn Đồ Ăn Kiêng</h2>
+            <!-- NÚT TAB PHÂN LOẠI ĐỒ ĂN & ĐỒ UỐNG -->
+            <div class="menu-tabs">
+                <button id="tabAll" class="tab-btn-menu active" onclick="switchMenuType('all')">🍱 Tất Cả</button>
+                <button id="tabFood" class="tab-btn-menu" onclick="switchMenuType('food')">🥗 Đồ Ăn</button>
+                <button id="tabDrink" class="tab-btn-menu" onclick="switchMenuType('drink')">🥤 Đồ Uống / Nước</button>
+            </div>
+
+            <h2 id="menuTitle">Thực Đơn Đồ Ăn & Đồ Uống</h2>
             <div id="productGrid" class="product-grid">
                 <!-- Sản phẩm render từ JS -->
             </div>
@@ -58,7 +86,18 @@
             <div id="cartItems" class="cart-items">
                 <p class="empty-cart">Giỏ hàng trống</p>
             </div>
-            
+
+            <!-- THÔNG TIN ĐỊA CHỈ NHẬN HÀNG -->
+            <div class="delivery-address-section" style="margin: 15px 0; padding-top: 15px; border-top: 1px dashed #ddd;">
+                <h3 style="font-size: 15px; margin-bottom: 10px; color: #2c3e50;">📍 Thông tin giao hàng</h3>
+                <div class="form-group" style="margin-bottom: 8px;">
+                    <input type="text" id="shippingPhone" placeholder="Số điện thoại nhận hàng..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; box-sizing: border-box;">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <textarea id="shippingAddress" rows="2" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; resize: none; box-sizing: border-box;"></textarea>
+                </div>
+            </div>
+
             <div class="cart-summary">
                 <div class="total-line">
                     <span>Tổng tiền:</span>
